@@ -13,17 +13,24 @@
 
       <ul>
         <li v-for="todo in todos" :key="todo.id">
-          {{ todo.text }} <button v-on:click="saveTodo">保存</button>
-          <button v-on:click="editTodo">編集</button>
+          <span v-show="!isEditMode(todo)">{{ todo.text }}</span>
+          <input type="text" v-model="todo.text" v-show="isEditMode(todo)" />
+
+          <button v-if="isEditMode(todo)" v-on:click="saveTodo(todo)">
+            保存
+          </button>
+          <button v-else v-on:click="editTodo(todo)">編集</button>
+
           <button v-on:click="deleteTodo(todo)">削除</button>
         </li>
       </ul>
 
       <div>
-        <textarea
+        <input
+          type="text"
           v-model="todoText"
           placeholder="やることを入力してください"
-        ></textarea>
+        />
         <button v-on:click="createTodo">作成</button>
       </div>
     </div>
@@ -48,6 +55,7 @@
               },
             ],
             todoText: "",
+            editModeTodos: [],
           };
         },
         methods: {
@@ -58,14 +66,19 @@
               text: this.todoText,
             });
           },
-          saveTodo() {
-            console.log("this is saveTodo");
+          saveTodo(targetTodo) {
+            this.editModeTodos = this.editModeTodos.filter(
+              (todo) => todo !== targetTodo
+            );
           },
-          editTodo() {
-            console.log("this is editTodo");
+          editTodo(targetTodo) {
+            this.editModeTodos.push(targetTodo);
           },
-          deleteTodo(todo) {
-            this.todos = this.todos.filter((t) => t !== todo);
+          deleteTodo(targetTodo) {
+            this.todos = this.todos.filter((todo) => todo !== targetTodo);
+          },
+          isEditMode(targetTodo) {
+            return this.editModeTodos.includes(targetTodo);
           },
         },
       });
