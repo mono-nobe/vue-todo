@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <div id="app">
+      <h1>Todo</h1>
+
+      <ul>
+        <li v-for="todo in todos" :key="todo.id">
+          {{ todo.text }} <button v-on:click="saveTodo">保存</button>
+          <button v-on:click="editTodo">編集</button>
+          <button v-on:click="deleteTodo(todo)">削除</button>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <textarea
+        v-model="message"
+        placeholder="やることを入力してください"
+      ></textarea>
+      <button v-on:click="createTodo">作成</button>
+    </div>
+
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            todos: [
+              {
+                id: 1,
+                text: "朝ご飯食べる",
+              },
+              {
+                id: 2,
+                text: "散歩する",
+              },
+              {
+                id: 3,
+                text: "お風呂に入る",
+              },
+            ],
+            message: "Hello Vue!!!",
+          };
+        },
+        methods: {
+          createTodo() {
+            console.log("this is createTodo");
+          },
+          saveTodo() {
+            console.log("this is saveTodo");
+          },
+          editTodo() {
+            console.log("this is editTodo");
+          },
+          deleteTodo(todo) {
+            console.log("this is deleteTodo");
+            console.log(todo.text);
+          },
+        },
+      });
+
+      // console.log("this is setItem");
+      // localStorage.setItem("Key", "保存する値");
+      // console.log("this is setItem");
+      // var value = localStorage.getItem("Key");
+      // console.log("this is value");
+      // console.log(value);
+    </script>
+  </body>
 </html>
