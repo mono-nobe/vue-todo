@@ -18,14 +18,14 @@
           <button v-on:click="deleteTodo(todo)">削除</button>
         </li>
       </ul>
-    </div>
 
-    <div>
-      <textarea
-        v-model="message"
-        placeholder="やることを入力してください"
-      ></textarea>
-      <button v-on:click="createTodo">作成</button>
+      <div>
+        <textarea
+          v-model="todoText"
+          placeholder="やることを入力してください"
+        ></textarea>
+        <button v-on:click="createTodo">作成</button>
+      </div>
     </div>
 
     <script>
@@ -47,12 +47,16 @@
                 text: "お風呂に入る",
               },
             ],
-            message: "Hello Vue!!!",
+            todoText: "",
           };
         },
         methods: {
           createTodo() {
-            console.log("this is createTodo");
+            const maxId = detectMaxId(this.todos);
+            this.todos.push({
+              id: maxId + 1,
+              text: this.todoText,
+            });
           },
           saveTodo() {
             console.log("this is saveTodo");
@@ -61,11 +65,16 @@
             console.log("this is editTodo");
           },
           deleteTodo(todo) {
-            console.log("this is deleteTodo");
-            console.log(todo.text);
+            this.todos = this.todos.filter((t) => t !== todo);
           },
         },
       });
+
+      function detectMaxId(todos) {
+        return todos.reduce((id, todo) => {
+          return id > todo.id ? id : todo.id;
+        }, 0);
+      }
 
       // console.log("this is setItem");
       // localStorage.setItem("Key", "保存する値");
