@@ -9,29 +9,43 @@
   </head>
   <body>
     <div id="app">
-      <h1>Todo</h1>
+      <h1 class="todo-title">TODOアプリ</h1>
 
-      <ul>
-        <li v-for="todo in todos" :key="todo.id">
-          <span v-show="!isEditMode(todo)">{{ todo.text }}</span>
-          <input type="text" v-model="todo.text" v-show="isEditMode(todo)" />
+      <div class="todo-list">
+        <h2>やること一覧</h2>
+        <ul>
+          <li v-for="todo in todos" :key="todo.id" class="todo-item">
+            <span v-show="!isEditMode(todo)">{{ todo.text }}</span>
+            <form
+              v-show="isEditMode(todo)"
+              v-on:submit.prevent="saveTodo(todo)"
+            >
+              <input type="text" v-model="todo.text" required />
+              <input type="submit" value="保存" />
+            </form>
 
-          <button v-if="isEditMode(todo)" v-on:click="saveTodo(todo)">
-            保存
-          </button>
-          <button v-else v-on:click="editTodo(todo)">編集</button>
+            <button v-show="!isEditMode(todo)" v-on:click="editTodo(todo)">
+              編集
+            </button>
+            <button v-show="!isEditMode(todo)" v-on:click="deleteTodo(todo)">
+              削除
+            </button>
+          </li>
+        </ul>
+      </div>
 
-          <button v-on:click="deleteTodo(todo)">削除</button>
-        </li>
-      </ul>
-
-      <div>
-        <input
-          type="text"
-          v-model="todoText"
-          placeholder="やることを入力してください"
-        />
-        <button v-on:click="createTodo">作成</button>
+      <div class="todo-create">
+        <h2>やること作成</h2>
+        <form v-on:submit.prevent="createTodo">
+          <input
+            type="text"
+            placeholder="やることを入力してください"
+            v-model="todoText"
+            required
+            class="todo-create-text"
+          />
+          <input type="submit" value="作成" />
+        </form>
       </div>
     </div>
 
@@ -40,42 +54,49 @@
         el: "#app",
         data: function () {
           return {
-            todos: [
-              {
-                id: 1,
-                text: "朝ご飯食べる",
-              },
-              {
-                id: 2,
-                text: "散歩する",
-              },
-              {
-                id: 3,
-                text: "お風呂に入る",
-              },
-            ],
-            todoText: "",
+            todos: [],
             editModeTodos: [],
+            todoText: "",
           };
+        },
+        created() {
+          if (localStorage.todos) {
+            this.todos = JSON.parse(localStorage.getItem("todos"));
+          }
         },
         methods: {
           createTodo() {
+            if (this.todoText === "") {
+              return;
+            }
+
             const maxId = detectMaxId(this.todos);
             this.todos.push({
               id: maxId + 1,
               text: this.todoText,
             });
-          },
-          saveTodo(targetTodo) {
-            this.editModeTodos = this.editModeTodos.filter(
-              (todo) => todo !== targetTodo
-            );
+            saveToLocalStorage(this.todos);
+
+            this.todoText = "";
           },
           editTodo(targetTodo) {
             this.editModeTodos.push(targetTodo);
           },
+          saveTodo(targetTodo) {
+            if (targetTodo.text === "") {
+              return;
+            }
+
+            this.editModeTodos = this.editModeTodos.filter(
+              (todo) => todo !== targetTodo
+            );
+
+            saveToLocalStorage(this.todos);
+          },
           deleteTodo(targetTodo) {
             this.todos = this.todos.filter((todo) => todo !== targetTodo);
+
+            saveToLocalStorage(this.todos);
           },
           isEditMode(targetTodo) {
             return this.editModeTodos.includes(targetTodo);
@@ -84,17 +105,34 @@
       });
 
       function detectMaxId(todos) {
+        if (todos.size === 0) {
+          return 0;
+        }
+
         return todos.reduce((id, todo) => {
           return id > todo.id ? id : todo.id;
         }, 0);
       }
 
-      // console.log("this is setItem");
-      // localStorage.setItem("Key", "保存する値");
-      // console.log("this is setItem");
-      // var value = localStorage.getItem("Key");
-      // console.log("this is value");
-      // console.log(value);
+      function saveToLocalStorage(todos) {
+        localStorage.setItem("todos", JSON.stringify(todos));
+      }
     </script>
+
+    <style scoped>
+      .todo-title,
+      .todo-list,
+      .todo-create {
+        margin-left: 30px;
+      }
+
+      .todo-item {
+        margin: 6px;
+      }
+
+      .todo-create-text {
+        width: 200px;
+      }
+    </style>
   </body>
 </html>
