@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1 class="todo-title">TODOアプリ</h1>
+
+      <div class="todo-list">
+        <h2>やること一覧</h2>
+        <ul>
+          <li v-for="todo in todos" :key="todo.id" class="todo-item">
+            <span v-show="!isEditMode(todo)">{{ todo.text }}</span>
+            <form
+              v-show="isEditMode(todo)"
+              v-on:submit.prevent="saveTodo(todo)"
+            >
+              <input type="text" v-model="todo.text" required />
+              <input type="submit" value="保存" />
+            </form>
+
+            <button v-show="!isEditMode(todo)" v-on:click="editTodo(todo)">
+              編集
+            </button>
+            <button v-show="!isEditMode(todo)" v-on:click="deleteTodo(todo)">
+              削除
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="todo-create">
+        <h2>やること作成</h2>
+        <form v-on:submit.prevent="createTodo">
+          <input
+            type="text"
+            placeholder="やることを入力してください"
+            v-model="todoText"
+            required
+            class="todo-create-text"
+          />
+          <input type="submit" value="作成" />
+        </form>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
