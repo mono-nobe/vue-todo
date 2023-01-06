@@ -55,13 +55,11 @@ const app = new Vue({
 app.mount("#app");
 
 function detectMaxId(todos) {
-  if (todos.size === 0) {
+  if (todos.length === 0) {
     return 0;
   }
 
-  return todos.reduce((id, todo) => {
-    return id > todo.id ? id : todo.id;
-  }, 0);
+  return Math.max(...todos.map((todo) => todo.id));
 }
 
 function saveToLocalStorage(todos) {
