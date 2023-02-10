@@ -1,0 +1,13 @@
+.todo-title,
+.todo-list,
+.todo-create {
+  margin-left: 30px;
+}
+
+.todo-item {
+  margin: 6px;
+}
+
+.todo-create-text {
+  width: 200px;
+}

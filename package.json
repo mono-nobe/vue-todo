@@ -1,0 +1,27 @@
+{
+  "name": "vue-todo",
+  "version": "1.0.0",
+  "description": "## Getting Started",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "prettier --write . && eslint --fix .",
+    "lint": "prettier --check . && eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mono-nobe/vue-todo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mono-nobe/vue-todo/issues"
+  },
+  "homepage": "https://github.com/mono-nobe/vue-todo#readme",
+  "dependencies": {
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-vue": "^9.8.0",
+    "prettier": "^2.8.1"
+  }
+}
